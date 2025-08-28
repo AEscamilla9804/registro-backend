@@ -14,7 +14,7 @@ const registrarAsistente = async (req, res) => {
                     const tallerInfo = await Taller.findById(tallerId);
                     const nombreTaller = tallerInfo ? tallerInfo.taller : `ID ${tallerId}`;
                     console.log(nombreTaller)
-                    return res.status(400).json({ msg: `El taller "${nombreTaller}" no tiene cupo disponible` });
+                    return res.status(400).json({ msg: `El taller "${nombreTaller}" no tiene cupo disponible`, error: true });
                 }
             }
         }
@@ -35,7 +35,7 @@ const registrarAsistente = async (req, res) => {
         res.status(201).json({ msg: 'Asistente registrado correctamente', asistenteGuardado });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: 'Error al registrar al asistente' });
+        res.status(500).json({ msg: 'Error al registrar al asistente', error: true });
     }
 }
 
@@ -46,12 +46,12 @@ const actualizarAsistente = async (req, res) => {
 
         // Validar que hay campos para actualizar
         if (!data || Object.keys(data).length === 0) {
-            return res.status(400).json({ msg: 'No se proporcionaron datos para actualizar' });
+            return res.status(400).json({ msg: 'No se proporcionaron datos para actualizar', error: true });
         }
 
         // Obtener asistente actual
         const asistente = await Asistente.findById(id);
-        if (!asistente) return res.status(404).json({ msg: 'Asistente no encontrado' });
+        if (!asistente) return res.status(404).json({ msg: 'Asistente no encontrado', error: true });
 
         // Actualización de talleres
         if (data.talleres) {
@@ -75,7 +75,7 @@ const actualizarAsistente = async (req, res) => {
             for (const tallerId of agregados) {
                 const taller = await Taller.findOne({ _id: tallerId, cupo: { $gt: 0 } });
                 if(!taller) {
-                    return res.status(400).json({ msg: `El taller ${taller.taller} no tiene cupo disponible`});
+                    return res.status(400).json({ msg: `El taller ${taller.taller} no tiene cupo disponible`, error: true});
                 }
                 await Taller.findByIdAndUpdate(tallerId, { $inc: { cupo: -1 } }); 
             }
@@ -100,14 +100,14 @@ const actualizarAsistente = async (req, res) => {
         res.json({ msg: 'Asistente actualizado correctamente', asistente: asistenteActualizado });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: 'Error al actualizar la información' });
+        res.status(500).json({ msg: 'Error al actualizar la información', error: true });
     }
 }
 
 const obtenerDatosAsistente = async (req, res) => {
     const { nombre } = req.query;
 
-    if (!nombre) return res.status(400).json({ msg: 'Proporcione un término de búsqueda' });
+    if (!nombre) return res.status(400).json({ msg: 'Proporcione un término de búsqueda', error: true });
 
     const palabras = nombre.trim().split(/\s+/);
 
@@ -121,13 +121,13 @@ const obtenerDatosAsistente = async (req, res) => {
         });
 
         if (asistentes.length === 0) {
-            return res.status(404).json({ msg: 'La búsqueda no arrojó resultados' });
+            return res.status(404).json({ msg: 'La búsqueda no arrojó resultados', error: true });
         }
 
         res.json(asistentes);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: 'Error al obtener los datos del asistente' });
+        res.status(500).json({ msg: 'Error al obtener los datos del asistente', error: true });
     }
 }
 

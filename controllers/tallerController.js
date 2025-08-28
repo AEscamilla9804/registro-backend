@@ -27,7 +27,7 @@ const detallesTaller = async (req, res) => {
         const id = req.params.id;
         const taller = await Taller.findById(id);
 
-        if (!taller) return res.status(404).json({ msg: 'Taller no encontrado '});
+        if (!taller) return res.status(404).json({ msg: 'Taller no encontrado' });
 
         res.status(200).json(taller);
     } catch (error) {

@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors'
 import conectarDB from './config/db.js';
 import staffRoutes from './routes/staffRoutes.js'
 import asistenteRoutes from './routes/asistenteRoutes.js';
@@ -10,6 +11,22 @@ app.use(express.json());
 
 dotenv.config();
 conectarDB();
+
+const allowedDomains = ['http://localhost:5173'];
+
+// CORS config
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, same server)
+    if (!origin || allowedDomains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS policy'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 
 app.use('/api/staff', staffRoutes);
 app.use('/api/asistentes', asistenteRoutes);

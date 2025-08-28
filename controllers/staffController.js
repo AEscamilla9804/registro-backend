@@ -24,7 +24,7 @@ const login = async (req, res) => {
 
     if (!staff) {
         const error = new Error('El ususario no existe');
-        return res.status(403).json({ msg: error.message });
+        return res.status(403).json({ msg: error.message, error: true });
     }
 
     // Validar contraseña
@@ -38,7 +38,7 @@ const login = async (req, res) => {
         })
     } else {
         const error = new Error('La contraseña es incorrecta');
-        return res.status(403).json({ msg: error.message });
+        return res.status(403).json({ msg: error.message, error: true });
     }
 }
 
