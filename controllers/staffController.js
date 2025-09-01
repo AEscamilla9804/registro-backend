@@ -1,4 +1,5 @@
 import Staff from "../models/Staff.js";
+import generarJWT from "../helpers/generarJWT.js";
 
 const registrar = async (req, res) => {
     try {
@@ -28,21 +29,28 @@ const login = async (req, res) => {
     }
 
     // Validar contraseña
-    if (await staff.comprobarPassword(password)) {
-        res.status(200).json({
-            _id: staff._id,
-            nombre: staff.nombre,
-            email: staff.email,
-            rol: staff.rol,
-            numCajero: staff.numCajero
-        })
-    } else {
+    if ( !(await staff.comprobarPassword(password)) ){
         const error = new Error('La contraseña es incorrecta');
         return res.status(403).json({ msg: error.message, error: true });
     }
+
+    // Generar JWT
+    res.json({
+        _id: staff._id,
+        nombre: staff.nombre,
+        email: staff.email,
+        rol: staff.rol,
+        token: generarJWT(staff._id)
+    });
+}
+
+const perfil = (req, res) => {
+    const { staff } = req;
+    res.json(staff);
 }
 
 export {
     registrar,
-    login
+    login,
+    perfil
 }
