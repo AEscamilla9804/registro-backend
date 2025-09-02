@@ -7,8 +7,8 @@ import {
 
 const router = express.Router();
 
-router.post('/registrar', registrarTaller);
 router.get('/', consultarTalleres);
+router.post('/registrar', registrarTaller);
 router.get('/:id', detallesTaller);
 
 export default router;

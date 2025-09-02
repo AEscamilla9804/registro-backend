@@ -1,9 +1,16 @@
 import Taller from "../models/Taller.js";
+import mexicoToUTC from "../helpers/mexicoToUTC.js";
 
 const registrarTaller = async (req, res) => {
     try {
+        const { fecha } = req.body;
+        const fechaUTC = mexicoToUTC(fecha);
+
         // Crear un nuevo evento
-        const taller = new Taller(req.body);
+        const taller = new Taller({
+            ...req.body,
+            fecha: fechaUTC
+        });
         const tallerGuardado = await taller.save();
         res.status(201).json(tallerGuardado);
     } catch (error) {
@@ -14,7 +21,20 @@ const registrarTaller = async (req, res) => {
 
 const consultarTalleres = async (req, res) => {
     try {
-        const talleres = await Taller.find().sort({ fecha: 1 });
+        // Setear rango del día
+        const inicioDia = new Date();
+        inicioDia.setHours(0, 0, 0, 0);
+
+        const finalDia = new Date();
+        finalDia.setHours(23, 59, 59, 999);
+
+        // Filtra eventos que se encuentren dentro del rango
+        const talleres = await Taller.find({
+            fecha: {
+                $gte: inicioDia,
+                $lt: finalDia
+            }
+        }).sort({ fecha: 1 });
         res.status(200).json(talleres);
     } catch (error) {
         console.log(error);

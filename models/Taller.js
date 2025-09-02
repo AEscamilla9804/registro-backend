@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const tallerSchema = mongoose.Schema({
-    taller: {
+    nombre: {
         type: String,
         required: true,
         trim: true
@@ -13,10 +13,6 @@ const tallerSchema = mongoose.Schema({
     },
     fecha: {
         type: Date,
-        required: true
-    },
-    hora: {
-        type: String,
         required: true
     },
     duracion: {
