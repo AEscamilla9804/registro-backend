@@ -60,13 +60,17 @@ const asistenteSchema = mongoose.Schema({
         enum: ["efectivo", "tarjeta", "transferencia"],
         required: true
     },
+    importe: {
+        type: Number,
+        required: true
+    },
     factura: {
         type: Boolean,
         required: true
     },
     beca: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: null
     },
     staffId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -5,6 +5,7 @@ import conectarDB from './config/db.js';
 import staffRoutes from './routes/staffRoutes.js'
 import asistenteRoutes from './routes/asistenteRoutes.js';
 import tallerRoutes from './routes/tallerRoutes.js';
+import congresoRoutes from './routes/congresoRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use(cors(corsOptions));
 app.use('/api/staff', staffRoutes);
 app.use('/api/asistentes', asistenteRoutes);
 app.use('/api/talleres', tallerRoutes);
+app.use('/api/congreso', congresoRoutes);
 
 const PORT = process.env.PORT || 4000;
 

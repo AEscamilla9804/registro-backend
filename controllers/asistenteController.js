@@ -34,7 +34,13 @@ const registrarAsistente = async (req, res) => {
 
         res.status(201).json({ msg: 'Asistente registrado correctamente', asistenteGuardado });
     } catch (error) {
-        console.log(error);
+        if (error.code === 11000) {
+            return res.status(400).json({
+                msg: 'El correo ya está registrado',
+                error: true
+            });
+        }
+
         res.status(500).json({ msg: 'Error al registrar al asistente', error: true });
     }
 }
